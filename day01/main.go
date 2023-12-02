@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+
+	"github.com/HeadTriXz/Advent-of-Code-2023/utils"
 )
 
 //go:embed input.txt
@@ -97,15 +99,6 @@ func getLastInt2(str string) (int, string) {
 	return maxIndex, maxChar
 }
 
-func sum(values []int) int {
-	sum := 0
-	for _, v := range values {
-		sum += v
-	}
-
-	return sum
-}
-
 func part1() int {
 	values := []int{}
 	lines := getInputLines()
@@ -126,7 +119,7 @@ func part1() int {
 		values = append(values, s)
 	}
 
-	sum := sum(values)
+	sum := utils.Sum(values)
 	return sum
 }
 
@@ -150,7 +143,7 @@ func part2() int {
 		values = append(values, s)
 	}
 
-	sum := sum(values)
+	sum := utils.Sum(values)
 	return sum
 }
 
