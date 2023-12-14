@@ -13,35 +13,19 @@ func getInputLines() []string {
 	return strings.Split(strings.TrimRight(input, "\n"), "\n")
 }
 
-func tiltNorth(lines []string) []string {
+func tiltHorizontal(lines []string, north bool) []string {
 	for i := 0; i < len(lines); i++ {
 		for j := 0; j < len(lines)-1; j++ {
 			top := lines[j]
 			bottom := lines[j+1]
 
 			for k := 0; k < len(top); k++ {
-				if bottom[k] == 'O' && top[k] == '.' {
+				if north && bottom[k] == 'O' && top[k] == '.' {
 					top = top[:k] + "O" + top[k+1:]
 					bottom = bottom[:k] + "." + bottom[k+1:]
 				}
-			}
 
-			lines[j] = top
-			lines[j+1] = bottom
-		}
-	}
-
-	return lines
-}
-
-func tiltSouth(lines []string) []string {
-	for i := 0; i < len(lines); i++ {
-		for j := 0; j < len(lines)-1; j++ {
-			top := lines[j]
-			bottom := lines[j+1]
-
-			for k := 0; k < len(top); k++ {
-				if bottom[k] == '.' && top[k] == 'O' {
+				if !north && bottom[k] == '.' && top[k] == 'O' {
 					top = top[:k] + "." + top[k+1:]
 					bottom = bottom[:k] + "O" + bottom[k+1:]
 				}
@@ -55,31 +39,18 @@ func tiltSouth(lines []string) []string {
 	return lines
 }
 
-func tiltWest(lines []string) []string {
+func tiltVertical(lines []string, west bool) []string {
 	for i := 0; i < len(lines); i++ {
 		for j := 0; j < len(lines[i]); j++ {
 			for k := 0; k < len(lines[i])-1; k++ {
 				left := lines[i][k]
 				right := lines[i][k+1]
 
-				if left == '.' && right == 'O' {
+				if west && left == '.' && right == 'O' {
 					lines[i] = lines[i][:k] + "O" + "." + lines[i][k+2:]
 				}
-			}
-		}
-	}
 
-	return lines
-}
-
-func tiltEast(lines []string) []string {
-	for i := 0; i < len(lines); i++ {
-		for j := 0; j < len(lines[i]); j++ {
-			for k := 0; k < len(lines[i])-1; k++ {
-				left := lines[i][k]
-				right := lines[i][k+1]
-
-				if left == 'O' && right == '.' {
+				if !west && left == 'O' && right == '.' {
 					lines[i] = lines[i][:k] + "." + "O" + lines[i][k+2:]
 				}
 			}
@@ -90,10 +61,10 @@ func tiltEast(lines []string) []string {
 }
 
 func spinCycle(lines []string) []string {
-	tilted := tiltNorth(lines)
-	tilted = tiltWest(tilted)
-	tilted = tiltSouth(tilted)
-	tilted = tiltEast(tilted)
+	tilted := tiltHorizontal(lines, true)
+	tilted = tiltVertical(tilted, true)
+	tilted = tiltHorizontal(tilted, false)
+	tilted = tiltVertical(tilted, false)
 
 	return tilted
 }
@@ -113,7 +84,7 @@ func calcLoad(lines []string) int {
 
 func part1() int {
 	lines := getInputLines()
-	tilted := tiltNorth(lines)
+	tilted := tiltHorizontal(lines, true)
 
 	return calcLoad(tilted)
 }
