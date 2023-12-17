@@ -44,31 +44,31 @@ func countVisited(visited map[VisitedPoint]bool) int {
 	return len(points)
 }
 
-func explore(position Point, direction Point, lines []string, visited *map[VisitedPoint]bool) {
+func explore(position Point, direction Point, lines []string, visited map[VisitedPoint]bool) map[VisitedPoint]bool {
 	nextPosition := Point{position.x + direction.x, position.y + direction.y}
 	if !isValidPoint(nextPosition.x, nextPosition.y, lines) {
-		return
+		return visited
 	}
 
 	point := VisitedPoint{nextPosition, direction}
-	if (*visited)[point] {
-		return
+	if visited[point] {
+		return visited
 	}
 
-	(*visited)[point] = true
+	visited[point] = true
 
 	switch lines[nextPosition.y][nextPosition.x] {
 	case '|':
 		if direction.x != 0 {
-			explore(nextPosition, directions['N'], lines, visited)
-			explore(nextPosition, directions['S'], lines, visited)
-			return
+			visited = explore(nextPosition, directions['N'], lines, visited)
+			visited = explore(nextPosition, directions['S'], lines, visited)
+			return visited
 		}
 	case '-':
 		if direction.y != 0 {
-			explore(nextPosition, directions['E'], lines, visited)
-			explore(nextPosition, directions['W'], lines, visited)
-			return
+			visited = explore(nextPosition, directions['E'], lines, visited)
+			visited = explore(nextPosition, directions['W'], lines, visited)
+			return visited
 		}
 	case '/':
 		direction = Point{-direction.y, -direction.x}
@@ -76,13 +76,12 @@ func explore(position Point, direction Point, lines []string, visited *map[Visit
 		direction = Point{direction.y, direction.x}
 	}
 
-	explore(nextPosition, direction, lines, visited)
+	return explore(nextPosition, direction, lines, visited)
 }
 
 func exploreWithCount(position Point, direction Point, lines []string) int {
 	visited := make(map[VisitedPoint]bool)
-
-	explore(position, direction, lines, &visited)
+	visited = explore(position, direction, lines, visited)
 
 	return countVisited(visited)
 }
