@@ -5,6 +5,8 @@ import (
 	"log"
 	"regexp"
 	"strings"
+
+	"github.com/HeadTriXz/Advent-of-Code-2023/utils"
 )
 
 //go:embed input.txt
@@ -52,25 +54,6 @@ func hasFoundAll(nodes []string) bool {
 	}
 
 	return true
-}
-
-func gdc(a, b int) int {
-	for b != 0 {
-		t := b
-		b = a % b
-		a = t
-	}
-
-	return a
-}
-
-func lcm(a, b int, integers ...int) int {
-	result := a * b / gdc(a, b)
-	for i := 0; i < len(integers); i++ {
-		result = lcm(result, integers[i])
-	}
-
-	return result
 }
 
 func part1() int {
@@ -142,7 +125,7 @@ func part2LCM() int {
 		stepCounts = append(stepCounts, steps)
 	}
 
-	return lcm(stepCounts[0], stepCounts[1], stepCounts...)
+	return utils.LCM(stepCounts[0], stepCounts[1], stepCounts...)
 }
 
 func main() {
